@@ -1,5 +1,12 @@
 # Camera-WaterMark — PWA（v3.0）
 
+> **官网 Website**：https://itangxs.top/camera-watermark/（EXIF 相机水印 · 跨平台落地页）
+> **在线试用 Try Online**：https://shiraijikuu.github.io/camera-watermark-pwa/
+
+[![官网 Website](https://img.shields.io/badge/官网-Website-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://itangxs.top/camera-watermark/)
+[![在线试用 Try Online](https://img.shields.io/badge/在线试用-Try%20Online-green?style=for-the-badge)](https://shiraijikuu.github.io/camera-watermark-pwa/)
+[![GitHub](https://img.shields.io/badge/GitHub-源码-black?style=for-the-badge&logo=github&logoColor=white)](https://github.com/shiraijikuu/camera-watermark)
+
 > 相机照片水印工具的网页版（渐进式网页应用）：无需 Mac / 开发者账号 / 上架，浏览器"添加到主屏幕"即像原生 App 一样全屏、带图标、可离线使用。
 > 作者：**shiraijikuu**　|　协议：MIT
 
