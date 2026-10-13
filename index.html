@@ -120,6 +120,8 @@ body.phone .topbar .social-btn svg{width:16px;height:16px;}
 input[type=range]{width:100%;accent-color:var(--accent);height:18px}
 input[type=number],input[type=text],select.cmb{padding:4px 6px;border-radius:7px;border:1px solid var(--line);background:var(--field);text-align:right;font-variant-numeric:tabular-nums;width:62px}
 select.cmb{width:100%;text-align:left;padding:6px 8px}
+select option{background:#ffffff;color:#1f2430}
+select optgroup{background:#eef1f6;color:#5a6272}
 input[type=text]{text-align:left;width:100%}
 textarea{width:100%;min-height:54px;resize:vertical;padding:7px 8px;border-radius:8px;border:1px solid var(--line);background:var(--field);color:var(--fg);line-height:1.5}
 input[type=color]{width:34px;height:26px;padding:1px;border:1px solid var(--line);border-radius:7px;background:var(--field);cursor:pointer}
@@ -3159,7 +3161,7 @@ function setTheme(key){document.documentElement.dataset.theme=resolveTheme(key);
 
 /* ================= 状态（对齐 Python DEFAULT_SETTINGS + 插件） ================= */
 const DEF_TPL='{make}  {model}\n{focal}  {aperture}  {shutter}  {iso}';
-const APP_VERSION='3.0';const APP_BUILD=16; // 单调递增：每次发版(含同版本修订)+1，与安卓 versionCode 对齐，用于同版本更新检测
+const APP_VERSION='3.0';const APP_BUILD=17; // 单调递增：每次发版(含同版本修订)+1，与安卓 versionCode 对齐，用于同版本更新检测
 const SOCIAL={douyin:'https://v.douyin.com/aySgkT0fxTQ/',bilibili:'https://b23.tv/yJr6O00',github:'https://github.com/shiraijikuu'}; // 顶部社交链接
 const UPDATE_URL='https://cdn.jsdelivr.net/gh/shiraijikuu/camera-watermark-android@main/update.json';
 const state={
