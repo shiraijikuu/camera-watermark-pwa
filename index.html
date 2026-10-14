@@ -195,13 +195,17 @@ input[type=color]{width:34px;height:26px;padding:1px;border:1px solid var(--line
 /* ===== 手机形态 ===== */
 #phone-frame{display:none}
 body.phone{background:#0a0d14;align-items:center;justify-content:center;display:flex;overflow:auto;padding:18px}
-body.phone #app{width:390px;height:844px;grid-template-rows:50px 40px 1fr 58px;grid-template-columns:1fr;
+body.phone #app{width:390px;height:844px;grid-template-rows:50px 40px 1fr 58px;grid-template-columns:minmax(0,1fr);
   grid-template-areas:"top" "tool" "main" "tabbar";border-radius:38px;overflow:hidden;border:9px solid #1c2230;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:phoneIn .35s var(--ease) both}
 @keyframes phoneIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
 body.phone .left,body.phone .right,body.phone .statusbar{display:none}
 body.phone .toolbar{padding:0 8px;gap:5px}
 body.phone .tb-search,body.phone .tb-sep-hide{display:none}
 body.phone .zoombar,body.phone #zoomFit,body.phone #zoom100,body.phone #zoom200{display:none!important}
+/* 手机/PWA：工具栏一行排不下时横向滑动（不裁切），并隐藏桌面级 A/B 对比槽 */
+body.phone .toolbar{overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+body.phone .toolbar::-webkit-scrollbar{display:none}
+body.phone .ab-slot,body.phone .ab-label{display:none}
 .phone-only-export{display:none}
 body.phone .phone-only-export{display:flex}
 body.phone .topbar{padding:0 12px;gap:6px}
@@ -2872,7 +2876,7 @@ SOFTWARE.
     <button class="tb-btn" id="btnRedo" title="Ctrl+Y" data-i18n="redo">↷ 重做</button>
     <button class="tb-btn" id="btnReset" data-i18n="reset">重置</button>
     <span class="sep tb-sep-hide"></span>
-    <span style="font-size:11px;color:var(--dim);align-self:center">A/B</span>
+    <span class="ab-label" style="font-size:11px;color:var(--dim);align-self:center">A/B</span>
     <button class="tb-btn ab-slot" data-slot="0" style="padding:4px 8px;min-width:30px">A</button>
     <button class="tb-btn ab-slot" data-slot="1" style="padding:4px 8px;min-width:30px">B</button>
     <button class="tb-btn ab-slot" data-slot="2" style="padding:4px 8px;min-width:30px">C</button>
@@ -3140,7 +3144,7 @@ const I18N={zh:{tagline:'照片水印工具',tplLib:'模板库',about:'关于',c
  g_deco:'底色 / 描边 / 阴影',bgBlock:'文字底色块',bgColor:'底色',outline:'描边',outlineColor:'颜色',shadow:'阴影',
  g_blur:'模糊卡片',b_ratio:'画面比例',b_layout:'排版布局',b_shadow:'前景阴影',b_outline:'前景描边',b_badge:'参数标签框',b_overlay:'叠加图片水印',b_order:'字段模板',b_align:'参数对齐',
  g_image:'图片水印（1-5 个，可叠加）',img_enable:'启用图片水印',img_count:'数量',img_align:'水印1对齐',
- g_export:'导出',ex_format:'格式',ex_suffix:'文件名后缀',ex_ratio:'导出比例',ex_batch:'批量导出全部'},
+ g_export:'导出',ex_format:'格式',ex_suffix:'文件名后缀',ex_ratio:'导出比例',ex_batch:'批量导出全部',importTouch:'导入',compareTouch:'对比',undoTouch:'↶',redoTouch:'↷'},
 en:{tagline:'Photo Watermark',tplLib:'Templates',about:'About',checkUpdate:'Update',language:'Language',export:'Export',phoneView:'Phone',backDesktop:'Desktop',
  photos:'Photos',import:'Import',crop:'Crop',co_free:'Free',co_orig:'Original',co_resetFrame:'Reset frame',co_restore:'Restore original',co_cancel:'Cancel',co_apply:'Apply crop',fit:'Fit',dropHint:'Drop photos · wheel zoom · drag bg to pan · drag watermark',dropHintTouch:'1-finger pan · pinch to zoom · drag watermark',collapse:'Close',
  g_style:'Style',style_frame:'Frame',g_frame:'Photo frame',f_tpl:'Template',f_logo:'Logo',f_model:'Camera',f_params:'Params',f_lens:'Lens',f_date:'Date',f_pw:'Photo width',f_ib:'Info bar height',f_mg:'Top/bottom margin',tab_style:'Style',tab_param:'Params',tab_export:'Export',tab_edit:'Edit',nb_text:'Text',nb_style:'Style',nb_image:'Image',nb_pos:'Position',nb_deco:'Decor',nb_export:'Export',selAll:'All',selNone:'None',compare:'Compare',reset:'Reset',undo:'↶ Undo',redo:'↷ Redo',qr_title:'QR watermark',qr_enable:'Enable QR',qr_content:'Content',qr_content_ph:'Blank = camera params / GPS',qr_size:'Size %',qr_pos:'Position',pos_1:'↖ Top-left',pos_2:'↑ Top',pos_3:'↗ Top-right',pos_4:'← Left',pos_5:'● Center',pos_6:'→ Right',pos_7:'↙ Bottom-left',pos_8:'↓ Bottom',pos_9:'↘ Bottom-right',auto:'Auto',name_tpl:'Name template',tpl_vars:'Vars: {name} {date} {time} {model} {make} {n} {suffix} {ratio}',zip_chk:'ZIP for batch export',exif_strip:'Strip (default)',exif_keep:'Keep original EXIF',cp_chk:'Write copyright (Artist/Copyright)',batch_title:'Batch multi-ratio export',batch_tip:'Pick ratios to export for selected photos',ratio_raw:'Original',ratio_xhs:'3:4 RED',max_edge:'Long edge px',edge_hint:'0 = original',batch_export:'Export selected (batch)',ready:'Ready',listHead:'Name / Camera · Params',style_text:'Text',style_blur:'Blur card',g_text:'Text content',tplPreset:'Preset',camOverride:'Override camera',
@@ -3148,7 +3152,7 @@ en:{tagline:'Photo Watermark',tplLib:'Templates',about:'About',checkUpdate:'Upda
  g_deco:'Bg / Outline / Shadow',bgBlock:'Text background',bgColor:'Bg',outline:'Outline',outlineColor:'Color',shadow:'Shadow',
  g_blur:'Blur card',b_ratio:'Canvas ratio',b_layout:'Layout',b_shadow:'FG shadow',b_outline:'FG outline',b_badge:'Badge boxes',b_overlay:'Overlay logo',b_order:'Field template',b_align:'Params align',
  g_image:'Image watermark (1-5)',img_enable:'Enable',img_count:'Count',img_align:'WM1 align',
- g_export:'Export',ex_format:'Format',ex_suffix:'Suffix',ex_ratio:'Export ratio',ex_batch:'Export all'}};
+ g_export:'Export',ex_format:'Format',ex_suffix:'Suffix',ex_ratio:'Export ratio',ex_batch:'Export all',undoTouch:'↶',redoTouch:'↷'}};
 let LANG='zh';const T=k=>(I18N[LANG]&&I18N[LANG][k])||I18N.zh[k]||k;
 function applyI18n(){document.querySelectorAll('[data-i18n]').forEach(e=>{let k=e.dataset.i18n;if(document.body.classList.contains('device')&&I18N[LANG][k+'Touch'])k=k+'Touch';e.textContent=T(k);});document.querySelectorAll('[data-i18n-ph]').forEach(e=>{e.setAttribute('placeholder',T(e.dataset.i18nPh));});}
 
@@ -3161,7 +3165,7 @@ function setTheme(key){document.documentElement.dataset.theme=resolveTheme(key);
 
 /* ================= 状态（对齐 Python DEFAULT_SETTINGS + 插件） ================= */
 const DEF_TPL='{make}  {model}\n{focal}  {aperture}  {shutter}  {iso}';
-const APP_VERSION='3.0';const APP_BUILD=17; // 单调递增：每次发版(含同版本修订)+1，与安卓 versionCode 对齐，用于同版本更新检测
+const APP_VERSION='3.0';const APP_BUILD=18; // 单调递增：每次发版(含同版本修订)+1，与安卓 versionCode 对齐，用于同版本更新检测
 const SOCIAL={douyin:'https://v.douyin.com/aySgkT0fxTQ/',bilibili:'https://b23.tv/yJr6O00',github:'https://github.com/shiraijikuu'}; // 顶部社交链接
 const UPDATE_URL='https://cdn.jsdelivr.net/gh/shiraijikuu/camera-watermark-android@main/update.json';
 const state={
