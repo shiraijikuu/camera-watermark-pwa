@@ -199,7 +199,9 @@ body.phone #app{width:390px;height:844px;grid-template-rows:50px 40px 1fr 58px;g
   grid-template-areas:"top" "tool" "main" "tabbar";border-radius:38px;overflow:hidden;border:9px solid #1c2230;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:phoneIn .35s var(--ease) both}
 @keyframes phoneIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
 body.phone .left,body.phone .right,body.phone .statusbar{display:none}
-body.phone .toolbar{padding:0 8px;gap:5px}
+body.phone .toolbar{padding:0 6px;gap:4px}
+/* 窄屏：缩小按钮内边距/字号，让 320 也能一行排下，无需横滑（overflow-x:auto 仍是兜底） */
+body.phone .tb-btn{padding:5px 7px;font-size:12px;flex:0 0 auto}
 body.phone .tb-search,body.phone .tb-sep-hide{display:none}
 body.phone .zoombar,body.phone #zoomFit,body.phone #zoom100,body.phone #zoom200{display:none!important}
 /* 手机/PWA：工具栏一行排不下时横向滑动（不裁切），并隐藏桌面级 A/B 对比槽 */
@@ -208,8 +210,13 @@ body.phone .toolbar::-webkit-scrollbar{display:none}
 body.phone .ab-slot,body.phone .ab-label{display:none}
 .phone-only-export{display:none}
 body.phone .phone-only-export{display:flex}
-body.phone .topbar{padding:0 12px;gap:6px}
+body.phone .topbar{padding:0 10px;gap:6px}
 body.phone .brand small,.topbtn-hide-phone{display:none}
+/* 窄屏顶栏：隐藏社交外链、收缩主题下拉，避免 360/320 等小宽度被顶出屏幕（这些外链在官网/关于页都有） */
+body.phone .topbar .social-btn{display:none}
+body.phone .topbar .brand{min-width:0;flex:0 1 auto;overflow:hidden}
+body.phone .topbar .top-spacer{flex:1 1 0;min-width:0}
+body.phone #themeSel{flex:0 1 auto;min-width:0;max-width:120px;padding:6px 6px;overflow:hidden;text-overflow:ellipsis}
 .tabbar{display:none;grid-area:tabbar;background:var(--elev);border-top:1px solid var(--line);grid-template-columns:repeat(4,1fr);z-index:8}
 body.phone .tabbar{display:grid}
 .tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;color:var(--dim);border:none;background:transparent}
@@ -3165,7 +3172,7 @@ function setTheme(key){document.documentElement.dataset.theme=resolveTheme(key);
 
 /* ================= 状态（对齐 Python DEFAULT_SETTINGS + 插件） ================= */
 const DEF_TPL='{make}  {model}\n{focal}  {aperture}  {shutter}  {iso}';
-const APP_VERSION='3.0';const APP_BUILD=18; // 单调递增：每次发版(含同版本修订)+1，与安卓 versionCode 对齐，用于同版本更新检测
+const APP_VERSION='3.0';const APP_BUILD=19; // 单调递增：每次发版(含同版本修订)+1，与安卓 versionCode 对齐，用于同版本更新检测
 const SOCIAL={douyin:'https://v.douyin.com/aySgkT0fxTQ/',bilibili:'https://b23.tv/yJr6O00',github:'https://github.com/shiraijikuu'}; // 顶部社交链接
 const UPDATE_URL='https://cdn.jsdelivr.net/gh/shiraijikuu/camera-watermark-android@main/update.json';
 const state={
@@ -7341,7 +7348,21 @@ restoreRecoveryState().then(()=>{buildControls();syncStaticInputs();setTheme(sta
 ;(function(){var sp=document.getElementById("cwmSplash");if(!sp)return;var done=false;var finish=function(){if(done)return;done=true;setTimeout(function(){sp.classList.add("sp-out");setTimeout(function(){sp.style.display="none";},460);},180);};var bi=sp.querySelector(".sp-bar i");if(bi)bi.addEventListener("animationend",finish,{once:true});setTimeout(finish,1400);})();
 
 /* PWA Service Worker：仅在 http(s) 浏览器注册（原生 App 已离线、file:// 不支持，均跳过，避免缓存旧内核） */
-if(!isNativeApp()&&location.protocol.indexOf('http')===0&&'serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
+if(!isNativeApp()&&location.protocol.indexOf('http')===0&&'serviceWorker' in navigator){
+  (function(){
+    var __cwmSWreloading=false;
+    /* 新 Service Worker 安装并 skipWaiting 接管后自动刷新一次：旧缓存用户下次打开即自动进入新版，避免长期停在旧版 */
+    navigator.serviceWorker.addEventListener('controllerchange',function(){
+      if(__cwmSWreloading)return;__cwmSWreloading=true;
+      try{window.location.reload();}catch(e){}
+    });
+    window.addEventListener('load',function(){
+      navigator.serviceWorker.register('sw.js').then(function(reg){
+        try{if(reg&&reg.update)reg.update();}catch(e){}
+      }).catch(function(){});
+    });
+  })();
+}
 applyView();buildList();
 mainEl.dataset.over=L('松开导入照片','Drop to import');
 setStatus(L('就绪','Ready'));
