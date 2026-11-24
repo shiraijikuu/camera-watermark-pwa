@@ -3049,6 +3049,7 @@ SOFTWARE.
       </select></div>
       <label class="chk" style="margin:6px 0"><input type="checkbox" id="writeCopyright"> <span data-i18n="cp_chk">写入版权信息（Artist/Copyright）</span></label>
       <div class="row"><label data-i18n="ex_ratio">导出比例</label><select class="cmb grow" id="exRatio"></select></div>
+      <div data-i18n="import_cap_note" style="font-size:11px;color:var(--dim);margin:4px 0 2px">导入照片长边统一限制为 2200px，导出不超过该尺寸</div>
     </div>
     <div class="group">
       <h4 data-i18n="batch_title">批量多比例导出</h4>
@@ -3061,7 +3062,7 @@ SOFTWARE.
         <label class="chk" style="font-size:12px"><input type="checkbox" class="batch-ratio" value="16:9">16:9</label>
         <label class="chk" style="font-size:12px"><input type="checkbox" class="batch-ratio" value="9:16">9:16</label>
       </div>
-      <div class="row"><label data-i18n="max_edge">长边像素</label><input type="number" id="batchMaxEdge" value="0" min="0" max="8000" step="100" style="width:80px;padding:4px 6px;border-radius:6px;border:1px solid var(--line);background:var(--field);color:var(--fg)"><span data-i18n="edge_hint" style="font-size:11px;color:var(--dim)">0=原始尺寸</span></div>
+      <div class="row"><label data-i18n="max_edge">长边像素</label><input type="number" id="batchMaxEdge" value="0" min="0" max="8000" step="100" style="width:80px;padding:4px 6px;border-radius:6px;border:1px solid var(--line);background:var(--field);color:var(--fg)"><span data-i18n="edge_hint" style="font-size:11px;color:var(--dim)">0=保留导入后尺寸</span></div>
       <button class="toolbtn primary" id="btnBatchExport" style="width:100%;margin-top:8px" data-i18n="batch_export">批量导出已选照片</button>
       <div id="batchProgress" style="font-size:12px;color:var(--dim);margin-top:6px;display:none"></div>
     </div>
@@ -3146,7 +3147,7 @@ if(!CanvasRenderingContext2D.prototype.roundRect){CanvasRenderingContext2D.proto
 /* ================= i18n ================= */
 const I18N={zh:{tagline:'照片水印工具',tplLib:'模板库',about:'关于',checkUpdate:'检查更新',language:'语言',export:'导出当前',phoneView:'手机形态',backDesktop:'返回桌面',
  photos:'照片',import:'导入照片',crop:'裁切照片',co_free:'自由',co_orig:'原始',co_resetFrame:'重置框',co_restore:'恢复原图',co_cancel:'取消',co_apply:'确认裁切',fit:'适',dropHint:'拖入照片 · 滚轮缩放 · 拖空白平移 · 拖水印改位置',dropHintTouch:'单指拖空白平移 · 双指捏合缩放 · 拖文字水印改位置',collapse:'收起',
- g_style:'水印样式',style_frame:'画框模板',g_frame:'画框模板',f_tpl:'模板',f_logo:'品牌标',f_model:'型号',f_params:'拍摄参数',f_lens:'镜头',f_date:'日期',f_pw:'主图占比',f_ib:'底栏高度',f_mg:'上下边距',tab_style:'样式',tab_param:'参数',tab_export:'导出',tab_edit:'编辑',nb_text:'水印文字',nb_style:'样式',nb_image:'图片水印',nb_pos:'位置',nb_deco:'装饰',nb_export:'导出',selAll:'全选',selNone:'全不选',compare:'对比原图',reset:'重置',undo:'↶ 撤销',redo:'↷ 重做',qr_title:'二维码水印',qr_enable:'启用二维码',qr_content:'内容',qr_content_ph:'留空=相机参数/GPS',qr_size:'大小 %',qr_pos:'位置',pos_1:'↖ 左上',pos_2:'↑ 上中',pos_3:'↗ 右上',pos_4:'← 左中',pos_5:'● 居中',pos_6:'→ 右中',pos_7:'↙ 左下',pos_8:'↓ 下中',pos_9:'↘ 右下',auto:'自动',name_tpl:'命名模板',tpl_vars:'变量: {name} {date} {time} {model} {make} {n} {suffix} {ratio}',zip_chk:'批量导出时打包 ZIP',exif_strip:'剥离（默认）',exif_keep:'保留原始 EXIF',cp_chk:'写入版权信息（Artist/Copyright）',batch_title:'批量多比例导出',batch_tip:'勾选要同时导出的比例（对列表中已勾选的照片生效）',ratio_raw:'原比例',ratio_xhs:'3:4 小红书',max_edge:'长边像素',edge_hint:'0=原始尺寸',batch_export:'批量导出已选照片',ready:'就绪',listHead:'文件名 / 相机 · 参数',style_text:'文字水印',style_blur:'模糊卡片',g_text:'文字内容',tplPreset:'模板预设',camOverride:'机型覆盖',
+ g_style:'水印样式',style_frame:'画框模板',g_frame:'画框模板',f_tpl:'模板',f_logo:'品牌标',f_model:'型号',f_params:'拍摄参数',f_lens:'镜头',f_date:'日期',f_pw:'主图占比',f_ib:'底栏高度',f_mg:'上下边距',tab_style:'样式',tab_param:'参数',tab_export:'导出',tab_edit:'编辑',nb_text:'水印文字',nb_style:'样式',nb_image:'图片水印',nb_pos:'位置',nb_deco:'装饰',nb_export:'导出',selAll:'全选',selNone:'全不选',compare:'对比原图',reset:'重置',undo:'↶ 撤销',redo:'↷ 重做',qr_title:'二维码水印',qr_enable:'启用二维码',qr_content:'内容',qr_content_ph:'留空=相机参数/GPS',qr_size:'大小 %',qr_pos:'位置',pos_1:'↖ 左上',pos_2:'↑ 上中',pos_3:'↗ 右上',pos_4:'← 左中',pos_5:'● 居中',pos_6:'→ 右中',pos_7:'↙ 左下',pos_8:'↓ 下中',pos_9:'↘ 右下',auto:'自动',name_tpl:'命名模板',tpl_vars:'变量: {name} {date} {time} {model} {make} {n} {suffix} {ratio}',zip_chk:'批量导出时打包 ZIP',exif_strip:'剥离（默认）',exif_keep:'保留原始 EXIF',cp_chk:'写入版权信息（Artist/Copyright）',batch_title:'批量多比例导出',batch_tip:'勾选要同时导出的比例（对列表中已勾选的照片生效）',ratio_raw:'原比例',ratio_xhs:'3:4 小红书',max_edge:'长边像素',edge_hint:'0=保留导入后尺寸',import_cap_note:'导入照片长边统一限制为 2200px，导出不超过该尺寸',batch_export:'批量导出已选照片',ready:'就绪',listHead:'文件名 / 相机 · 参数',style_text:'文字水印',style_blur:'模糊卡片',g_text:'文字内容',tplPreset:'模板预设',camOverride:'机型覆盖',
  g_font:'字体 / 文字',fontFamily:'字体',loadFont:'加载',textColor:'颜色',bold:'加粗',g_pos:'位置（可在预览上拖动）',
  g_deco:'底色 / 描边 / 阴影',bgBlock:'文字底色块',bgColor:'底色',outline:'描边',outlineColor:'颜色',shadow:'阴影',
  g_blur:'模糊卡片',b_ratio:'画面比例',b_layout:'排版布局',b_shadow:'前景阴影',b_outline:'前景描边',b_badge:'参数标签框',b_overlay:'叠加图片水印',b_order:'字段模板',b_align:'参数对齐',
@@ -3154,7 +3155,7 @@ const I18N={zh:{tagline:'照片水印工具',tplLib:'模板库',about:'关于',c
  g_export:'导出',ex_format:'格式',ex_suffix:'文件名后缀',ex_ratio:'导出比例',ex_batch:'批量导出全部',importTouch:'导入',compareTouch:'对比',undoTouch:'↶',redoTouch:'↷'},
 en:{tagline:'Photo Watermark',tplLib:'Templates',about:'About',checkUpdate:'Update',language:'Language',export:'Export',phoneView:'Phone',backDesktop:'Desktop',
  photos:'Photos',import:'Import',crop:'Crop',co_free:'Free',co_orig:'Original',co_resetFrame:'Reset frame',co_restore:'Restore original',co_cancel:'Cancel',co_apply:'Apply crop',fit:'Fit',dropHint:'Drop photos · wheel zoom · drag bg to pan · drag watermark',dropHintTouch:'1-finger pan · pinch to zoom · drag watermark',collapse:'Close',
- g_style:'Style',style_frame:'Frame',g_frame:'Photo frame',f_tpl:'Template',f_logo:'Logo',f_model:'Camera',f_params:'Params',f_lens:'Lens',f_date:'Date',f_pw:'Photo width',f_ib:'Info bar height',f_mg:'Top/bottom margin',tab_style:'Style',tab_param:'Params',tab_export:'Export',tab_edit:'Edit',nb_text:'Text',nb_style:'Style',nb_image:'Image',nb_pos:'Position',nb_deco:'Decor',nb_export:'Export',selAll:'All',selNone:'None',compare:'Compare',reset:'Reset',undo:'↶ Undo',redo:'↷ Redo',qr_title:'QR watermark',qr_enable:'Enable QR',qr_content:'Content',qr_content_ph:'Blank = camera params / GPS',qr_size:'Size %',qr_pos:'Position',pos_1:'↖ Top-left',pos_2:'↑ Top',pos_3:'↗ Top-right',pos_4:'← Left',pos_5:'● Center',pos_6:'→ Right',pos_7:'↙ Bottom-left',pos_8:'↓ Bottom',pos_9:'↘ Bottom-right',auto:'Auto',name_tpl:'Name template',tpl_vars:'Vars: {name} {date} {time} {model} {make} {n} {suffix} {ratio}',zip_chk:'ZIP for batch export',exif_strip:'Strip (default)',exif_keep:'Keep original EXIF',cp_chk:'Write copyright (Artist/Copyright)',batch_title:'Batch multi-ratio export',batch_tip:'Pick ratios to export for selected photos',ratio_raw:'Original',ratio_xhs:'3:4 RED',max_edge:'Long edge px',edge_hint:'0 = original',batch_export:'Export selected (batch)',ready:'Ready',listHead:'Name / Camera · Params',style_text:'Text',style_blur:'Blur card',g_text:'Text content',tplPreset:'Preset',camOverride:'Override camera',
+ g_style:'Style',style_frame:'Frame',g_frame:'Photo frame',f_tpl:'Template',f_logo:'Logo',f_model:'Camera',f_params:'Params',f_lens:'Lens',f_date:'Date',f_pw:'Photo width',f_ib:'Info bar height',f_mg:'Top/bottom margin',tab_style:'Style',tab_param:'Params',tab_export:'Export',tab_edit:'Edit',nb_text:'Text',nb_style:'Style',nb_image:'Image',nb_pos:'Position',nb_deco:'Decor',nb_export:'Export',selAll:'All',selNone:'None',compare:'Compare',reset:'Reset',undo:'↶ Undo',redo:'↷ Redo',qr_title:'QR watermark',qr_enable:'Enable QR',qr_content:'Content',qr_content_ph:'Blank = camera params / GPS',qr_size:'Size %',qr_pos:'Position',pos_1:'↖ Top-left',pos_2:'↑ Top',pos_3:'↗ Top-right',pos_4:'← Left',pos_5:'● Center',pos_6:'→ Right',pos_7:'↙ Bottom-left',pos_8:'↓ Bottom',pos_9:'↘ Bottom-right',auto:'Auto',name_tpl:'Name template',tpl_vars:'Vars: {name} {date} {time} {model} {make} {n} {suffix} {ratio}',zip_chk:'ZIP for batch export',exif_strip:'Strip (default)',exif_keep:'Keep original EXIF',cp_chk:'Write copyright (Artist/Copyright)',batch_title:'Batch multi-ratio export',batch_tip:'Pick ratios to export for selected photos',ratio_raw:'Original',ratio_xhs:'3:4 RED',max_edge:'Long edge px',edge_hint:'0 = keep imported size',import_cap_note:'Photos are capped at a 2200px long edge on import; exports cannot exceed this size',batch_export:'Export selected (batch)',ready:'Ready',listHead:'Name / Camera · Params',style_text:'Text',style_blur:'Blur card',g_text:'Text content',tplPreset:'Preset',camOverride:'Override camera',
  g_font:'Font / Text',fontFamily:'Font',loadFont:'Load',textColor:'Color',bold:'Bold',g_pos:'Position (draggable)',
  g_deco:'Bg / Outline / Shadow',bgBlock:'Text background',bgColor:'Bg',outline:'Outline',outlineColor:'Color',shadow:'Shadow',
  g_blur:'Blur card',b_ratio:'Canvas ratio',b_layout:'Layout',b_shadow:'FG shadow',b_outline:'FG outline',b_badge:'Badge boxes',b_overlay:'Overlay logo',b_order:'Field template',b_align:'Params align',
@@ -3172,7 +3173,7 @@ function setTheme(key){document.documentElement.dataset.theme=resolveTheme(key);
 
 /* ================= 状态（对齐 Python DEFAULT_SETTINGS + 插件） ================= */
 const DEF_TPL='{make}  {model}\n{focal}  {aperture}  {shutter}  {iso}';
-const APP_VERSION='3.0';const APP_BUILD=19; // 单调递增：每次发版(含同版本修订)+1，与安卓 versionCode 对齐，用于同版本更新检测
+const APP_VERSION='3.0';const APP_BUILD=20; // 单调递增：每次发版(含同版本修订)+1，与安卓 versionCode 对齐，用于同版本更新检测
 const SOCIAL={douyin:'https://v.douyin.com/aySgkT0fxTQ/',bilibili:'https://b23.tv/yJr6O00',github:'https://github.com/shiraijikuu'}; // 顶部社交链接
 const UPDATE_URL='https://cdn.jsdelivr.net/gh/shiraijikuu/camera-watermark-android@main/update.json';
 const state={
@@ -6757,6 +6758,7 @@ async function ingest(file){
  let bmp;try{bmp=await createImageBitmap(workFile,{imageOrientation:'from-image'});}catch(e){bmp=await loadImg(workFile);}
  checkLargeImage(bmp.width,bmp.height);
  const cap=2200,rr=Math.min(1,cap/Math.max(bmp.width,bmp.height));const c=document.createElement('canvas');c.width=Math.round(bmp.width*rr);c.height=Math.round(bmp.height*rr);c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);
+ if(rr<1)showToast(L('原图长边已按上限 '+cap+'px 降采样','Downscaled to a long edge of '+cap+'px'));
  photos.push({name:file.name,src:c,meta,exifBytes});current=photos.length-1;buildList();scheduleRender();
 }
 async function ingestFiles(files){const arr=[...files].filter(f=>f.type.startsWith('image/')||/\.(jpe?g|png|webp|bmp|heic|heif)$/i.test(f.name));for(const f of arr)await ingest(f);setStatus(L('已导入 ','Imported ')+arr.length+L(' 张',' photos'));}
@@ -7234,7 +7236,7 @@ function openExternal(url){
 function aboutHTML(){
  const link='<a href="javascript:void(0)" onclick="openExternal(\''+CWM_REPO+'\')" style="color:var(--accent);word-break:break-all">'+CWM_REPO+'</a>';
  return '<div style="line-height:1.9;font-size:12.5px">'+
- L('<b>Camera-WaterMark v'+APP_VERSION+'</b> <span style="color:#8a8a8a;font-weight:400;font-size:11px">build '+APP_BUILD+'</span><br>一款离线可用的照片水印工具：读取 EXIF 参数，添加文字 / 图片 / 模糊卡片水印，支持全分辨率导出。','<b>Camera-WaterMark v'+APP_VERSION+'</b> <span style="color:#8a8a8a;font-weight:400;font-size:11px">build '+APP_BUILD+'</span><br>An offline photo watermark tool: reads EXIF, adds text / logo / blur-card watermarks, with full-res export.')+
+ L('<b>Camera-WaterMark v'+APP_VERSION+'</b> <span style="color:#8a8a8a;font-weight:400;font-size:11px">build '+APP_BUILD+'</span><br>一款离线可用的照片水印工具：读取 EXIF 参数，添加文字 / 图片 / 模糊卡片水印，按导入后分辨率导出（长边 ≤2200px）。','<b>Camera-WaterMark v'+APP_VERSION+'</b> <span style="color:#8a8a8a;font-weight:400;font-size:11px">build '+APP_BUILD+'</span><br>An offline photo watermark tool: reads EXIF, adds text / logo / blur-card watermarks; exports at the imported resolution (long edge up to 2200px).')+
  '<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--line)">'+
  L('作者：','Author: ')+'<b>'+CWM_AUTHOR+'</b><br>'+
  'GitHub：'+link+'<br>'+
